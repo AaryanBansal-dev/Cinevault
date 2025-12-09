@@ -22,6 +22,8 @@
     "next": "15.5.4",
     "dotenv": "catalog:",
     "zod": "^4.1.11",
+    "drizzle-orm": "^0.44.2",
+    "nanoid": "^5.1.0",
     "@Cinevault/auth": "workspace:*",
     "@Cinevault/db": "workspace:*"
   }

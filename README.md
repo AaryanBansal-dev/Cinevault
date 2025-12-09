@@ -31,8 +31,8 @@ This project uses PostgreSQL with Drizzle ORM.
 3. Apply the schema to your database:
 ```bash
 bun run db:push
+docker compose up -d
 ```
-
 
 Then, run the development server:
 

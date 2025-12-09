@@ -48,3 +48,9 @@ coverage
 .cache
 tmp
 temp
+
+# Database
+postgres-data/
+
+# Uploaded Videos
+videos/
