@@ -58,7 +58,7 @@ export default function UserMenu() {
 		{ href: "/library", label: "My Library", icon: Library },
 		{ href: "/upload", label: "Upload Video", icon: Upload },
 		{ href: "/settings", label: "Settings", icon: Settings },
-	];
+	] as const;
 
 	return (
 		<div className="relative group">

@@ -28,7 +28,7 @@ const navLinks = [
 	{ href: "/playlists", label: "Playlists", icon: ListMusic },
 	{ href: "/favorites", label: "Favorites", icon: Heart },
 	{ href: "/upload", label: "Upload", icon: Upload },
-];
+] as const;
 
 export default function Header() {
 	const pathname = usePathname();

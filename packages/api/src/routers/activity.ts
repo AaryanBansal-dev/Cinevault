@@ -67,7 +67,7 @@ export const activityRouter = router({
                 ]),
                 resourceId: z.string().optional(),
                 resourceType: z.string().optional(),
-                metadata: z.record(z.any()).optional(),
+                metadata: z.record(z.string(), z.any()).optional(),
             })
         )
         .mutation(async ({ ctx, input }) => {
