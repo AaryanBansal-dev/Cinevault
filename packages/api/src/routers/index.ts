@@ -2,6 +2,10 @@ import { protectedProcedure, publicProcedure, router } from "../index";
 import { videoRouter } from "./video";
 import { folderRouter } from "./folder";
 import { settingsRouter } from "./settings";
+import { playlistRouter } from "./playlist";
+import { tagRouter } from "./tag";
+import { likesRouter } from "./likes";
+import { activityRouter } from "./activity";
 
 export const appRouter = router({
 	// Health check
@@ -21,6 +25,12 @@ export const appRouter = router({
 	video: videoRouter,
 	folder: folderRouter,
 	settings: settingsRouter,
+	playlist: playlistRouter,
+	tag: tagRouter,
+	likes: likesRouter,
+	activity: activityRouter,
 });
 
 export type AppRouter = typeof appRouter;
+
+

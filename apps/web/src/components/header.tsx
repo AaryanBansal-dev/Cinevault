@@ -16,12 +16,17 @@ import {
 	Library,
 	Settings,
 	FolderOpen,
+	ListMusic,
+	Heart,
+	Command,
 } from "lucide-react";
 import { useState } from "react";
 
 const navLinks = [
 	{ href: "/", label: "Home", icon: Home },
 	{ href: "/library", label: "My Library", icon: Library },
+	{ href: "/playlists", label: "Playlists", icon: ListMusic },
+	{ href: "/favorites", label: "Favorites", icon: Heart },
 	{ href: "/upload", label: "Upload", icon: Upload },
 ];
 

@@ -15,6 +15,13 @@
       "when": 1765277319525,
       "tag": "0001_quiet_doctor_doom",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1765278848292,
+      "tag": "0002_round_medusa",
+      "breakpoints": true
     }
   ]
 }

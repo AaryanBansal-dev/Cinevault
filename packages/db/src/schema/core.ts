@@ -226,3 +226,200 @@ export const userSettingsRelations = relations(userSettings, ({ one }) => ({
         references: [user.id],
     }),
 }));
+
+// ============================================
+// PLAYLISTS
+// ============================================
+export const playlist = pgTable(
+    "playlist",
+    {
+        id: text("id").primaryKey(),
+        ownerId: text("owner_id")
+            .notNull()
+            .references(() => user.id, { onDelete: "cascade" }),
+        name: text("name").notNull(),
+        description: text("description"),
+        isPublic: boolean("is_public").default(false).notNull(),
+        thumbnailUrl: text("thumbnail_url"),
+        color: text("color").default("#8B5CF6"),
+        createdAt: timestamp("created_at").defaultNow().notNull(),
+        updatedAt: timestamp("updated_at")
+            .defaultNow()
+            .$onUpdate(() => new Date())
+            .notNull(),
+    },
+    (table) => [
+        index("playlist_owner_idx").on(table.ownerId),
+    ],
+);
+
+export const playlistVideo = pgTable(
+    "playlist_video",
+    {
+        id: text("id").primaryKey(),
+        playlistId: text("playlist_id")
+            .notNull()
+            .references(() => playlist.id, { onDelete: "cascade" }),
+        videoId: text("video_id")
+            .notNull()
+            .references(() => video.id, { onDelete: "cascade" }),
+        position: integer("position").default(0).notNull(),
+        addedAt: timestamp("added_at").defaultNow().notNull(),
+    },
+    (table) => [
+        index("playlist_video_playlist_idx").on(table.playlistId),
+        index("playlist_video_video_idx").on(table.videoId),
+    ],
+);
+
+// ============================================
+// TAGS
+// ============================================
+export const tag = pgTable(
+    "tag",
+    {
+        id: text("id").primaryKey(),
+        ownerId: text("owner_id")
+            .notNull()
+            .references(() => user.id, { onDelete: "cascade" }),
+        name: text("name").notNull(),
+        color: text("color").default("#6366F1"),
+        createdAt: timestamp("created_at").defaultNow().notNull(),
+    },
+    (table) => [
+        index("tag_owner_idx").on(table.ownerId),
+    ],
+);
+
+export const videoTag = pgTable(
+    "video_tag",
+    {
+        id: text("id").primaryKey(),
+        videoId: text("video_id")
+            .notNull()
+            .references(() => video.id, { onDelete: "cascade" }),
+        tagId: text("tag_id")
+            .notNull()
+            .references(() => tag.id, { onDelete: "cascade" }),
+        createdAt: timestamp("created_at").defaultNow().notNull(),
+    },
+    (table) => [
+        index("video_tag_video_idx").on(table.videoId),
+        index("video_tag_tag_idx").on(table.tagId),
+    ],
+);
+
+// ============================================
+// LIKES (Favorites)
+// ============================================
+export const videoLike = pgTable(
+    "video_like",
+    {
+        id: text("id").primaryKey(),
+        userId: text("user_id")
+            .notNull()
+            .references(() => user.id, { onDelete: "cascade" }),
+        videoId: text("video_id")
+            .notNull()
+            .references(() => video.id, { onDelete: "cascade" }),
+        createdAt: timestamp("created_at").defaultNow().notNull(),
+    },
+    (table) => [
+        index("video_like_user_idx").on(table.userId),
+        index("video_like_video_idx").on(table.videoId),
+    ],
+);
+
+// ============================================
+// ACTIVITY LOG
+// ============================================
+export const activityTypeEnum = pgEnum("activity_type", [
+    "video_upload",
+    "video_watch",
+    "video_like",
+    "video_delete",
+    "playlist_create",
+    "playlist_add_video",
+    "folder_create",
+    "tag_create",
+    "settings_update",
+]);
+
+export const activity = pgTable(
+    "activity",
+    {
+        id: text("id").primaryKey(),
+        userId: text("user_id")
+            .notNull()
+            .references(() => user.id, { onDelete: "cascade" }),
+        type: activityTypeEnum("type").notNull(),
+        resourceId: text("resource_id"), // ID of the related resource
+        resourceType: text("resource_type"), // Type of resource (video, playlist, etc.)
+        metadata: jsonb("metadata"), // Additional context
+        createdAt: timestamp("created_at").defaultNow().notNull(),
+    },
+    (table) => [
+        index("activity_user_idx").on(table.userId),
+        index("activity_type_idx").on(table.type),
+        index("activity_created_idx").on(table.createdAt),
+    ],
+);
+
+// ============================================
+// ADDITIONAL RELATIONS
+// ============================================
+export const playlistRelations = relations(playlist, ({ one, many }) => ({
+    owner: one(user, {
+        fields: [playlist.ownerId],
+        references: [user.id],
+    }),
+    videos: many(playlistVideo),
+}));
+
+export const playlistVideoRelations = relations(playlistVideo, ({ one }) => ({
+    playlist: one(playlist, {
+        fields: [playlistVideo.playlistId],
+        references: [playlist.id],
+    }),
+    video: one(video, {
+        fields: [playlistVideo.videoId],
+        references: [video.id],
+    }),
+}));
+
+export const tagRelations = relations(tag, ({ one, many }) => ({
+    owner: one(user, {
+        fields: [tag.ownerId],
+        references: [user.id],
+    }),
+    videos: many(videoTag),
+}));
+
+export const videoTagRelations = relations(videoTag, ({ one }) => ({
+    video: one(video, {
+        fields: [videoTag.videoId],
+        references: [video.id],
+    }),
+    tag: one(tag, {
+        fields: [videoTag.tagId],
+        references: [tag.id],
+    }),
+}));
+
+export const videoLikeRelations = relations(videoLike, ({ one }) => ({
+    user: one(user, {
+        fields: [videoLike.userId],
+        references: [user.id],
+    }),
+    video: one(video, {
+        fields: [videoLike.videoId],
+        references: [video.id],
+    }),
+}));
+
+export const activityRelations = relations(activity, ({ one }) => ({
+    user: one(user, {
+        fields: [activity.userId],
+        references: [user.id],
+    }),
+}));

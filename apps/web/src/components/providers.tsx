@@ -7,6 +7,7 @@ import { httpBatchLink } from "@trpc/client";
 import { trpc } from "@/utils/trpc";
 import { ThemeProvider } from "./theme-provider";
 import { Toaster } from "./ui/sonner";
+import { CommandPalette } from "./command-palette";
 
 function getBaseUrl() {
 	if (typeof window !== "undefined") return "";
@@ -53,6 +54,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
 			<trpc.Provider client={trpcClient} queryClient={queryClient}>
 				<QueryClientProvider client={queryClient}>
 					{children}
+					<CommandPalette />
 					<ReactQueryDevtools />
 				</QueryClientProvider>
 			</trpc.Provider>
@@ -60,3 +62,4 @@ export default function Providers({ children }: { children: React.ReactNode }) {
 		</ThemeProvider>
 	);
 }
+
