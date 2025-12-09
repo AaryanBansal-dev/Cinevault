@@ -550,7 +550,11 @@ export default function WatchPage({ params }: { params: Promise<{ id: string }> 
 											<span className="text-xs uppercase tracking-wide">Duration</span>
 										</div>
 										<p className="font-medium">
-											{video.duration > 0 ? formatTime(video.duration) : "Calculating..."}
+											{duration > 0 
+												? formatTime(duration) 
+												: video.duration > 0 
+													? formatTime(video.duration) 
+													: "Calculating..."}
 										</p>
 									</div>
 
